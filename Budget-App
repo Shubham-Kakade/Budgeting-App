@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWise Demo</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons for modern iconography -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom styles to complement Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background for the page */
+        }
+        .mobile-screen::-webkit-scrollbar {
+            width: 4px;
+        }
+        .mobile-screen::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        .mobile-screen::-webkit-scrollbar-thumb {
+            background: #facc15; /* Yellow accent */
+            border-radius: 2px;
+        }
+        /* Active state for bottom navigation links */
+        .bottom-nav-link.active {
+            color: #facc15; /* Yellow accent */
+        }
+        /* Animation for page transitions */
+        .page {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom styles for tabs */
+        .tab-link.active {
+            border-color: #facc15;
+            color: #facc15;
+        }
+         /* Style for the reports accordion */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        /* Modal styles */
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        /* Floating Action Button Menu */
+        .fab-menu {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center min-h-screen">
+
+    <!-- Mobile App Container -->
+    <div class="w-full max-w-sm h-[800px] max-h-[90vh] bg-gray-900 text-white flex flex-col rounded-3xl shadow-2xl overflow-hidden border-4 border-gray-700 relative">
+        
+        <!-- Top Header (Health Bar) -->
+        <header id="app-header" class="h-16 bg-gray-800/80 backdrop-blur-sm flex items-center justify-between px-4 shrink-0 border-b border-gray-700 relative z-10">
+            <i id="header-back-button" data-lucide="arrow-left" class="cursor-pointer hidden" data-page-link=""></i>
+            <i id="header-profile-icon" data-lucide="smile" class="cursor-pointer text-yellow-400"></i>
+            <h2 id="page-title" class="text-lg font-bold text-yellow-400 absolute left-1/2 -translate-x-1/2"></h2>
+            <div id="header-main-icons" class="flex items-center space-x-5">
+                <i data-lucide="qr-code" class="cursor-pointer"></i>
+                <i data-lucide="bot" class="cursor-pointer" data-page-link="mentor"></i>
+                <i data-lucide="help-circle" class="cursor-pointer"></i>
+            </div>
+            <i id="header-plus-button" data-lucide="plus" class="cursor-pointer hidden"></i>
+        </header>
+
+        <!-- Page Content -->
+        <main id="main-content" class="flex-1 overflow-y-auto p-4">
+            
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page space-y-6">
+                <!-- Pocket Money -->
+                <div>
+                    <p class="text-sm text-gray-400">Pocket Money</p>
+                    <p class="text-4xl font-bold text-yellow-400">₹ 8,540.00</p>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Income</p><p class="text-lg font-bold text-green-400">₹15k</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Expenses</p><p class="text-lg font-bold text-red-400">₹6.4k</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Savings</p><p class="text-lg font-bold text-blue-400">₹8.6k</p></div>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><h2 class="text-lg font-semibold text-white mb-2">Cashflow Trend</h2><canvas id="cashflowChart" class="max-h-48"></canvas></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="wallet"><i data-lucide="wallet" class="text-yellow-400"></i><span class="font-semibold">Wallet & Card</span></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="groups"><i data-lucide="users" class="text-yellow-400"></i><span class="font-semibold">Quest Group</span></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="deals"><i data-lucide="tag" class="text-yellow-400"></i><span class="font-semibold">Deals</span></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="goals"><i data-lucide="shield-check" class="text-yellow-400"></i><span class="font-semibold">Goal Shield</span></div>
+                </div>
+            </div>
+
+            <!-- Cashflow Overview Page -->
+            <div id="cashflow" class="page hidden space-y-5">
+                <div class="relative"><input type="text" placeholder="Search by remark or amount..." class="w-full p-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg focus:ring-1 focus:ring-yellow-400 focus:outline-none text-sm"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"></i></div>
+                <div class="flex items-center space-x-2 overflow-x-auto pb-2">
+                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="calendar" class="h-4 w-4 mr-1.5"></i>Date</button>
+                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="book-user" class="h-4 w-4 mr-1.5"></i>Entry</button>
+                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="user" class="h-4 w-4 mr-1.5"></i>Member</button>
+                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="arrow-left-right" class="h-4 w-4 mr-1.5"></i>Type</button>
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center bg-gray-800 p-4 rounded-xl border border-gray-700">
+                    <div><p class="text-sm text-green-400">Inflow</p><p class="text-lg font-bold">₹15,000</p></div>
+                    <div><p class="text-sm text-red-400">Outflow</p><p class="text-lg font-bold">₹6,460</p></div>
+                    <div><p class="text-sm text-yellow-400">Balance</p><p class="text-lg font-bold">₹8,540</p></div>
+                </div>
+                <div><button data-page-link="reports" class="w-full flex justify-between items-center text-left p-3 bg-gray-800 rounded-lg border border-yellow-500/50"><span class="font-semibold text-yellow-400">View Reports and Insights</span><i data-lucide="chevron-right" class="h-5 w-5"></i></button></div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Detailed Statement</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg"><div class="flex items-center"><div class="p-2 bg-green-500/20 rounded-full mr-3"><i data-lucide="arrow-down-left" class="h-5 w-5 text-green-400"></i></div><div><p class="font-semibold">Internship Stipend</p><p class="text-xs text-gray-400">Aug 4, 2025</p></div></div><p class="font-bold text-green-400">+ ₹10,000</p></div>
+                        <div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg"><div class="flex items-center"><div class="p-2 bg-red-500/20 rounded-full mr-3"><i data-lucide="arrow-up-right" class="h-5 w-5 text-red-400"></i></div><div><p class="font-semibold">Rent Payment</p><p class="text-xs text-gray-400">Aug 5, 2025</p></div></div><p class="font-bold text-red-400">- ₹4,500</p></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reports and Insights Page -->
+            <div id="reports" class="page hidden">
+                <div class="mb-4 border-b border-gray-700"><div class="flex space-x-4" id="reports-tabs"><button class="tab-link py-2 border-b-2 active" data-tab="insights-content">Insights</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="reports-content-tab">Reports</button></div></div>
+                <div id="insights-content" class="report-tab-content space-y-4"><div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><h3 class="font-semibold mb-2">Expense Breakdown</h3><canvas id="expensesPieChart" class="max-h-48"></canvas></div><div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><h3 class="font-semibold mb-2">Savings Trend</h3><canvas id="savingsBarChart" class="max-h-48"></canvas></div><div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><h3 class="font-semibold mb-2">Income Sources</h3><canvas id="incomePieChart" class="max-h-48"></canvas></div></div>
+                <div id="reports-content-tab" class="report-tab-content hidden space-y-4"><div class="bg-gray-800 p-4 rounded-xl border border-gray-700 space-y-4"><h3 class="font-semibold">Generate Report</h3><div><label class="text-sm text-gray-400">Start Date</label><input type="date" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div><label class="text-sm text-gray-400">End Date</label><input type="date" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex items-center space-x-2"><button class="flex-1 text-sm font-semibold bg-gray-700 px-3 py-2 rounded-full">Weekly Summary</button><button class="flex-1 text-sm font-semibold bg-gray-700 px-3 py-2 rounded-full">Monthly Summary</button></div><button class="w-full text-md font-bold bg-yellow-500 text-gray-900 px-3 py-3 rounded-full">OK</button></div></div>
+            </div>
+
+            <!-- Envelope Page -->
+            <div id="envelope" class="page hidden space-y-5">
+                <div class="text-center"><p class="text-sm text-gray-400">Income to Assign</p><p class="text-2xl font-bold text-green-400">₹2,500.00</p></div>
+                <div class="relative"><input type="text" placeholder="Search envelopes..." class="w-full p-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg focus:ring-1 focus:ring-yellow-400 focus:outline-none text-sm"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"></i></div>
+                <div id="envelope-list" class="space-y-3">
+                    <div class="bg-green-900/50 p-3 rounded-lg border border-green-500/50"><div class="flex justify-between items-start"><div><p class="font-semibold">Grocery</p><p class="text-xs text-gray-300">Due: Aug 25, 2025</p></div><div class="flex space-x-2"><i data-lucide="pencil" class="h-4 w-4 cursor-pointer"></i><i data-lucide="trash-2" class="h-4 w-4 cursor-pointer"></i></div></div></div>
+                    <div class="bg-orange-900/50 p-3 rounded-lg border border-orange-500/50"><div class="flex justify-between items-start"><div><p class="font-semibold">Car Rent</p><p class="text-xs text-gray-300">Due: Aug 19, 2025</p></div><div class="flex space-x-2"><i data-lucide="pencil" class="h-4 w-4 cursor-pointer"></i><i data-lucide="trash-2" class="h-4 w-4 cursor-pointer"></i></div></div></div>
+                </div>
+                <div class="p-3 bg-blue-900/50 border border-blue-400/50 rounded-lg flex items-start text-xs"><i data-lucide="bot" class="text-blue-400 mr-2 mt-0.5 shrink-0 h-4 w-4"></i><p class="text-blue-200"><strong>AI Mentor:</strong> Your 'Car Rent' is due soon. Make sure you have enough funds assigned!</p></div>
+                <div><button id="analytics-toggle" class="w-full flex justify-between items-center text-left p-3 bg-gray-800 rounded-lg border border-gray-700"><span class="font-semibold">Analytics</span><i id="analytics-arrow" data-lucide="chevron-down" class="h-5 w-5 transition-transform"></i></button><div id="analytics-content" class="accordion-content"><div class="p-4 bg-gray-800 border border-t-0 border-gray-700 rounded-b-lg"><h4 class="font-semibold text-center mb-2">Expense Distribution</h4><canvas id="envelopePieChart" class="max-h-48"></canvas></div></div></div>
+            </div>
+
+            <!-- Planner & To-Do Page -->
+            <div id="planner-todo" class="page hidden space-y-5">
+                <div><h3 class="text-lg font-semibold">To-Do List</h3><div id="todo-list" class="mt-2 space-y-2"><div class="flex items-center justify-between p-3 bg-gray-800 rounded-lg"><div><p class="font-semibold">Rent: ₹2000</p><p class="text-xs text-gray-400">Due: Aug 20</p></div><div class="flex items-center space-x-2"><button class="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded-full">Assign</button><i data-lucide="trash-2" class="h-4 w-4 cursor-pointer"></i></div></div></div></div>
+                <div><h3 class="text-lg font-semibold">Weekly Routine</h3><div class="grid grid-cols-4 gap-2 text-center text-xs mt-2"><div class="bg-gray-800 p-2 rounded-lg">Mon</div><div class="bg-gray-800 p-2 rounded-lg">Tue</div><div class="bg-gray-800 p-2 rounded-lg">Wed</div><div class="bg-gray-800 p-2 rounded-lg">Thu</div></div></div>
+                <div><h3 class="text-lg font-semibold">Calendar</h3><div class="bg-gray-800 p-3 rounded-xl mt-2"><div class="grid grid-cols-7 text-center text-xs text-gray-400 mb-2"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div><div class="grid grid-cols-7 text-center text-sm gap-1"><div>1</div><div>2</div><div class="relative"><span class="relative z-10">3</span><span class="absolute bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 bg-green-500 rounded-full"></span></div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div class="relative"><span class="relative z-10">15</span><span class="absolute bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 bg-yellow-500 rounded-full"></span></div><div>16</div><div>17</div><div>18</div><div>19</div><div class="relative"><span class="relative z-10">20</span><span class="absolute bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 bg-red-500 rounded-full"></span></div><div>21</div></div></div></div>
+            </div>
+
+            <!-- Learn Hub Page -->
+            <div id="learn" class="page hidden space-y-5">
+                <div><h3 class="text-lg font-semibold">Your Progress</h3><div class="w-full bg-gray-700 rounded-full h-2.5 mt-2"><div id="learn-progress-bar" class="bg-yellow-400 h-2.5 rounded-full" style="width: 25%;"></div></div></div>
+                <div class="mb-4 border-b border-gray-700"><div class="flex" id="learn-level-tabs"><button class="learn-tab-link flex-1 py-2 border-b-2 active" data-tab="learn-beginner">Beginner</button><button class="learn-tab-link flex-1 py-2 border-b-2 border-transparent text-gray-400" data-tab="learn-intermediate">Intermediate</button><button class="learn-tab-link flex-1 py-2 border-b-2 border-transparent text-gray-400" data-tab="learn-advanced">Advanced</button></div></div>
+                <div id="learn-beginner" class="learn-level-content space-y-4">
+                    <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/fbbf24/1f2937?text=Budgeting');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Income:</p><p class="text-xs text-gray-300">Money received, especially on a regular basis, for work or through investments.</p></div>
+                    <h4 class="font-semibold text-yellow-400">Roadmap</h4><p class="text-xs text-gray-400">1. Track Income → 2. List Expenses → 3. Create Budget</p>
+                    <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Module 1 Quiz</button>
+                </div>
+                <div id="learn-intermediate" class="learn-level-content hidden space-y-4">
+                    <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/818cf8/1f2937?text=Credit+Scores');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Investing:</p><p class="text-xs text-gray-300">Allocating money with the expectation of a positive benefit/return in the future.</p></div>
+                    <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Investing Quiz</button>
+                </div>
+                <div id="learn-advanced" class="learn-level-content hidden space-y-4">
+                    <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/f87171/1f2937?text=Portfolio');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Diversification:</p><p class="text-xs text-gray-300">A risk management strategy that mixes a wide variety of investments within a portfolio.</p></div>
+                     <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Portfolio Quiz</button>
+                </div>
+            </div>
+
+            <!-- Wallet & Card Page -->
+            <div id="wallet" class="page hidden space-y-5">
+                <div class="mb-4 border-b border-gray-700"><div class="flex space-x-4" id="wallet-tabs"><button class="tab-link py-2 border-b-2 active" data-tab="wallet-main">Wallet</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="wallet-card">My Card</button></div></div>
+                <div id="wallet-main" class="wallet-tab-content space-y-4"><div class="bg-gray-800 p-4 rounded-xl text-center"><p class="text-sm text-gray-400">Current Balance</p><p class="text-3xl font-bold">₹ 8,540.00</p></div><div class="grid grid-cols-3 gap-3 text-center"><div class="cursor-pointer p-3 rounded-lg bg-gray-800"><i data-lucide="plus" class="mx-auto text-green-400"></i><p class="text-xs mt-1 font-semibold">Add</p></div><div class="cursor-pointer p-3 rounded-lg bg-gray-800"><i data-lucide="scan-line" class="mx-auto text-blue-400"></i><p class="text-xs mt-1 font-semibold">Scan</p></div><div class="cursor-pointer p-3 rounded-lg bg-gray-800"><i data-lucide="send" class="mx-auto text-purple-400"></i><p class="text-xs mt-1 font-semibold">Send</p></div></div><div class="bg-gray-800 p-4 rounded-xl"><h3 class="font-semibold mb-3">History</h3><div class="space-y-3"><div class="flex justify-between items-center"><p>Cafe Coffee Day</p><p class="font-bold text-red-400">- ₹150</p></div><div class="flex justify-between items-center"><p>Received from Dad</p><p class="font-bold text-green-400">+ ₹10,000</p></div></div></div></div>
+                <div id="wallet-card" class="wallet-tab-content hidden"><div class="bg-gradient-to-br from-yellow-500 to-yellow-700 p-5 rounded-xl shadow-lg text-gray-900"><h4 class="font-semibold">FinWise Prepaid</h4><div class="my-4 text-center font-mono text-xl tracking-widest">**** **** **** 1234</div><div class="flex justify-between items-end"><div><p class="text-xs">Card Holder</p><p class="font-medium text-sm">AMAN KUMAR</p></div><div><p class="text-xs">Expires</p><p class="font-medium text-sm">12/28</p></div></div></div></div>
+            </div>
+
+            <!-- Groups Page -->
+            <div id="groups" class="page hidden space-y-4">
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 cursor-pointer" data-page-link="group-detail"><h3 class="font-semibold">Goa Trip 🌴</h3><p class="text-xs text-gray-400">3 Members | Latest: Flights</p></div>
+                <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 cursor-pointer" data-page-link="group-detail"><h3 class="font-semibold">Flatmates - Bills 🏠</h3><p class="text-xs text-gray-400">2 Members | Latest: Rent</p></div>
+            </div>
+            
+            <!-- Group Detail Page -->
+            <div id="group-detail" class="page hidden">
+                 <div class="mb-4 border-b border-gray-700"><div class="flex space-x-4" id="group-detail-tabs"><button class="tab-link py-2 border-b-2 active" data-tab="group-events">Events</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="group-expenses">Expenses</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="group-balances">Balances</button></div></div>
+                 <div id="group-expenses" class="group-detail-tab-content hidden space-y-3"><div class="p-2 border-l-2 border-red-400 bg-gray-700/50 rounded-r-lg"><p class="text-sm">Flights (Paid by Rohan)</p><p class="text-xs text-red-300">You owe ₹3,000</p></div></div>
+                 <div id="group-balances" class="group-detail-tab-content hidden space-y-3"><div class="text-center font-bold text-green-400">Overall: You are owed ₹750</div><button id="share-qr-button" class="w-full mt-4 text-md font-bold bg-yellow-500 text-gray-900 px-3 py-3 rounded-full flex items-center justify-center"><i data-lucide="qr-code" class="mr-2"></i>Share QR to Settle</button></div>
+            </div>
+
+            <!-- Deals Page -->
+            <div id="deals" class="page hidden space-y-4">
+                <div class="bg-gray-800 p-3 rounded-xl border border-gray-700"><h3 class="font-semibold mb-2 text-sm flex items-center"><i data-lucide="sparkles" class="text-yellow-400 mr-2 h-4 w-4"></i> Recommended For You</h3><div class="p-2 bg-gray-700/50 rounded-lg"><p class="font-semibold text-sm">Domino's Pizza: 50% OFF</p></div></div>
+                <div class="space-y-3"><div class="bg-gray-800 p-3 rounded-xl border border-gray-700"><h4 class="font-semibold">Burger King</h4><p class="text-sm text-gray-300">Buy 1 Get 1 Free on Whoppers</p></div><div class="bg-gray-800 p-3 rounded-xl border border-gray-700"><h4 class="font-semibold">MakeMyTrip</h4><p class="text-sm text-gray-300">Flat 15% OFF on domestic flights</p></div></div>
+            </div>
+
+            <!-- Goal Shield Page -->
+            <div id="goals" class="page hidden space-y-4">
+                <div class="text-center"><p class="text-sm text-gray-400">Total Saved</p><p class="text-2xl font-bold text-yellow-400">₹27,000 / ₹60,000</p></div>
+                <div class="bg-gray-800 p-4 rounded-xl border-2 border-yellow-400">
+                    <div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">💻</div><h3 class="font-semibold">New Laptop</h3></div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-yellow-400 h-2.5 rounded-full" style="width: 37%;"></div></div>
+                    <div class="flex justify-between text-xs mt-1"><p>₹18,500 / ₹50,000</p><p class="text-gray-400">10 months left</p></div>
+                    <p class="text-xs text-center mt-2 text-green-400 bg-green-900/50 p-1 rounded">Save ₹3,150/month to stay on track</p>
+                </div>
+                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
+                    <div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">❤️</div><h3 class="font-semibold">Health Emergency Fund</h3></div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-blue-400 h-2.5 rounded-full" style="width: 85%;"></div></div>
+                    <p class="text-right text-xs mt-1 text-gray-400">₹8,500 / ₹10,000</p>
+                </div>
+            </div>
+
+            <!-- AI Mentor Page -->
+            <div id="mentor" class="page hidden"></div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <footer class="h-20 bg-gray-800/80 backdrop-blur-sm flex items-center justify-around shrink-0 border-t border-gray-700 z-10">
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2 active" data-page="dashboard"><i data-lucide="home"></i><span class="block text-xs mt-1">Home</span></a>
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="cashflow"><i data-lucide="bar-chart-3"></i><span class="block text-xs mt-1">Cashflow</span></a>
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="envelope"><i data-lucide="folder-kanban"></i><span class="block text-xs mt-1">Envelope</span></a>
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="planner-todo"><i data-lucide="list-checks"></i><span class="block text-xs mt-1">Planner</span></a>
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="learn"><i data-lucide="graduation-cap"></i><span class="block text-xs mt-1">Learn</span></a>
+        </footer>
+
+        <!-- Floating Action Button for Goal Shield -->
+        <div id="goal-fab-container" class="absolute bottom-24 right-4 z-20 hidden">
+            <div id="fab-menu" class="fab-menu flex flex-col items-center space-y-2 mb-2 scale-0 opacity-0 origin-bottom">
+                <button class="flex items-center bg-gray-700 py-1 px-3 rounded-full text-xs" id="add-goal-button">Add Goal</button>
+                <button class="flex items-center bg-gray-700 py-1 px-3 rounded-full text-xs" id="add-fund-button">Add Emergency Fund</button>
+            </div>
+            <button id="goal-fab" class="w-14 h-14 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg"><i data-lucide="plus" class="text-gray-900"></i></button>
+        </div>
+
+        <!-- Modals -->
+        <div id="add-goal-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30">
+            <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700">
+                <h3 class="text-lg font-bold text-yellow-400">Add New Goal</h3>
+                <div><label class="text-sm">Goal Name</label><input type="text" placeholder="e.g., Laptop" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
+                <div><label class="text-sm">Target Amount</label><input type="number" placeholder="50000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
+                <div><label class="text-sm">Completion Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div>
+                <div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div>
+            </div>
+        </div>
+        <div id="add-fund-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30">
+             <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700">
+                <h3 class="text-lg font-bold text-yellow-400">New Emergency Fund</h3>
+                <div><label class="text-sm">Category</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Health</option><option>Vehicle</option><option>Travel</option></select></div>
+                <div><label class="text-sm">Target Amount</label><input type="number" placeholder="10000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
+                <div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div>
+            </div>
+        </div>
+        <div id="qr-code-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-20">
+             <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700 text-center">
+                <h3 class="text-lg font-bold text-yellow-400">Settle Up</h3>
+                <img src="https://placehold.co/200x200/ffffff/1f2937?text=Scan+QR" alt="QR Code" class="mx-auto rounded-lg">
+                <p class="text-sm">Scan with any UPI app to pay Rohan ₹3,000.</p>
+                <button id="close-qr-modal" class="w-full bg-gray-600 font-bold py-2 rounded-lg">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            lucide.createIcons();
+
+            new Chart(document.getElementById('cashflowChart'), { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'], datasets: [{ data: [3000, 5000, 4500, 8000, 6000, 9500, 7500, 8540], backgroundColor: 'rgba(250, 204, 21, 0.1)', borderColor: '#facc15', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#9ca3af' } } }, plugins: { legend: { display: false } } } });
+            
+            const pageTitle = document.getElementById('page-title');
+            const headerMainIcons = document.getElementById('header-main-icons');
+            const headerProfileIcon = document.getElementById('header-profile-icon');
+            const headerBackButton = document.getElementById('header-back-button');
+            const headerPlusButton = document.getElementById('header-plus-button');
+            const goalFabContainer = document.getElementById('goal-fab-container');
+
+            const pageConfig = {
+                dashboard: { title: 'Home', back: null, plus: false },
+                cashflow: { title: 'Cashflow Overview', back: 'dashboard', plus: false },
+                envelope: { title: 'Envelopes', back: 'dashboard', plus: true },
+                'planner-todo': { title: 'Planner & To-Do', back: 'dashboard', plus: true },
+                learn: { title: 'Finance Hub', back: 'dashboard', plus: false },
+                reports: { title: 'Reports & Insights', back: 'cashflow', plus: false },
+                wallet: { title: 'Wallet & Card', back: 'dashboard', plus: false },
+                groups: { title: 'Quest Group', back: 'dashboard', plus: true },
+                'group-detail': { title: 'Goa Trip 🌴', back: 'groups', plus: true },
+                deals: { title: 'Deals', back: 'dashboard', plus: false },
+                goals: { title: 'Goal Shield', back: 'dashboard', plus: false },
+                mentor: { title: 'AI Mentor', back: 'dashboard', plus: false }
+            };
+
+            function showPage(pageId) {
+                document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+                document.getElementById(pageId)?.classList.remove('hidden');
+                document.getElementById('main-content').scrollTop = 0;
+                
+                const config = pageConfig[pageId] || { title: 'Page', back: 'dashboard', plus: false };
+                const isDashboard = pageId === 'dashboard';
+
+                pageTitle.textContent = config.title;
+                pageTitle.classList.toggle('hidden', isDashboard);
+                headerMainIcons.classList.toggle('hidden', !isDashboard);
+                headerProfileIcon.classList.toggle('hidden', !isDashboard);
+                headerBackButton.classList.toggle('hidden', isDashboard || !config.back);
+                headerPlusButton.classList.toggle('hidden', !config.plus);
+                goalFabContainer.classList.toggle('hidden', pageId !== 'goals');
+                
+                if (config.back) headerBackButton.dataset.pageLink = config.back;
+
+                if (pageId === 'reports' && !document.getElementById('reports').dataset.chartsInitialized) {
+                    initializeReportCharts();
+                    document.getElementById('reports').dataset.chartsInitialized = 'true';
+                }
+                if (pageId === 'envelope' && !document.getElementById('envelope').dataset.chartsInitialized) {
+                    initializeEnvelopeChart();
+                    document.getElementById('envelope').dataset.chartsInitialized = 'true';
+                }
+            }
+
+            function setActiveLink(pageId) {
+                 document.querySelectorAll('.bottom-nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if(link.dataset.page === pageId) link.classList.add('active');
+                });
+            }
+            
+            document.querySelectorAll('[data-page-link], .bottom-nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.dataset.pageLink || link.dataset.page;
+                    if (pageId) {
+                        showPage(pageId);
+                        setActiveLink(pageId);
+                    }
+                });
+            });
+
+            // --- Tab Switching Logic ---
+            function setupTabSwitching(tabSelector, contentSelector) {
+                 document.querySelectorAll(tabSelector).forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll(tabSelector).forEach(t => { t.classList.remove('active'); t.classList.add('border-transparent', 'text-gray-400'); });
+                        tab.classList.add('active'); tab.classList.remove('border-transparent', 'text-gray-400');
+                        document.querySelectorAll(contentSelector).forEach(c => c.classList.add('hidden'));
+                        document.getElementById(tab.dataset.tab)?.classList.remove('hidden');
+                    });
+                });
+            }
+            setupTabSwitching('#reports-tabs button', '.report-tab-content');
+            setupTabSwitching('#wallet-tabs button', '.wallet-tab-content');
+            setupTabSwitching('#learn-level-tabs button', '.learn-level-content');
+            setupTabSwitching('#group-detail-tabs button', '.group-detail-tab-content');
+
+
+            // --- Modal & FAB Logic ---
+            const addGoalModal = document.getElementById('add-goal-modal');
+            const addFundModal = document.getElementById('add-fund-modal');
+            const qrCodeModal = document.getElementById('qr-code-modal');
+
+            function toggleModal(modal, show) {
+                if(show) {
+                    modal.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    modal.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+            
+            document.getElementById('goal-fab').addEventListener('click', () => {
+                const menu = document.getElementById('fab-menu');
+                menu.classList.toggle('scale-0');
+                menu.classList.toggle('opacity-0');
+            });
+
+            document.getElementById('add-goal-button').addEventListener('click', () => toggleModal(addGoalModal, true));
+            document.getElementById('add-fund-button').addEventListener('click', () => toggleModal(addFundModal, true));
+            document.querySelectorAll('.modal-cancel').forEach(btn => btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal'), false)));
+            document.querySelectorAll('.modal-save').forEach(btn => btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal'), false)));
+            document.getElementById('share-qr-button')?.addEventListener('click', () => toggleModal(qrCodeModal, true));
+            document.getElementById('close-qr-modal')?.addEventListener('click', () => toggleModal(qrCodeModal, false));
+            
+            // --- Analytics Accordion ---
+            document.getElementById('analytics-toggle')?.addEventListener('click', () => {
+                const content = document.getElementById('analytics-content');
+                const arrow = document.getElementById('analytics-arrow');
+                const isOpening = !content.style.maxHeight;
+                content.style.maxHeight = isOpening ? content.scrollHeight + "px" : null;
+                arrow.style.transform = isOpening ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+            
+            // --- Learn Hub Progress ---
+            document.querySelectorAll('.quiz-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const progressBar = document.getElementById('learn-progress-bar');
+                    let currentWidth = parseFloat(progressBar.style.width) || 0;
+                    progressBar.style.width = Math.min(currentWidth + 15, 100) + '%';
+                });
+            });
+
+
+            // --- Chart Initializations ---
+            function initializeChart(elementId, type, labels, data, backgroundColors, extraOptions = {}) {
+                const ctx = document.getElementById(elementId)?.getContext('2d');
+                if (!ctx) return;
+                new Chart(ctx, { type, data: { labels, datasets: [{ data, backgroundColor: backgroundColors, borderWidth: 0 }] }, options: { responsive: true, ...extraOptions } });
+            }
+
+            function initializeReportCharts() {
+                const legendOptions = { plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 15 } } } };
+                initializeChart('expensesPieChart', 'pie', ['Food', 'Rent', 'Travel'], [45, 35, 20], ['#f87171', '#60a5fa', '#fb923c'], legendOptions);
+                initializeChart('incomePieChart', 'doughnut', ['Stipend', 'Freelance'], [80, 20], ['#34d399', '#a78bfa'], legendOptions);
+                const barCtx = document.getElementById('savingsBarChart')?.getContext('2d');
+                if(barCtx) new Chart(barCtx, { type: 'bar', data: { labels: ['Jun', 'Jul', 'Aug'], datasets: [{ label: 'Savings', data: [1200, 1800, 1500], backgroundColor: '#4ade80' }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' }}, y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } } } } });
+            }
+            
+            function initializeEnvelopeChart() {
+                initializeChart('envelopePieChart', 'pie', ['Grocery', 'Car Rent'], [1500, 2000], ['#22c55e', '#f97316'], { plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 15 } } } });
+            }
+        });
+    </script>
+</body>
+</html>
