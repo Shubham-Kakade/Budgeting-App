@@ -25,15 +25,13 @@
             font-family: 'Inter', sans-serif;
             background-color: #111827; /* Dark background for the page */
         }
-        .mobile-screen::-webkit-scrollbar {
-            width: 4px;
+        /* Hide scrollbar for main content area */
+        #main-content {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
         }
-        .mobile-screen::-webkit-scrollbar-track {
-            background: #1f2937;
-        }
-        .mobile-screen::-webkit-scrollbar-thumb {
-            background: #facc15; /* Yellow accent */
-            border-radius: 2px;
+        #main-content::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
         /* Active state for bottom navigation links */
         .bottom-nav-link.active {
@@ -66,6 +64,19 @@
         .fab-menu {
             transition: all 0.3s ease;
         }
+        /* Flowchart styles */
+        .flow-arrow {
+            position: relative;
+            padding-left: 20px;
+        }
+        .flow-arrow::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #facc15;
+        }
     </style>
 </head>
 <body class="flex justify-center items-center min-h-screen">
@@ -76,12 +87,12 @@
         <!-- Top Header (Health Bar) -->
         <header id="app-header" class="h-16 bg-gray-800/80 backdrop-blur-sm flex items-center justify-between px-4 shrink-0 border-b border-gray-700 relative z-10">
             <i id="header-back-button" data-lucide="arrow-left" class="cursor-pointer hidden" data-page-link=""></i>
-            <i id="header-profile-icon" data-lucide="smile" class="cursor-pointer text-yellow-400"></i>
+            <i id="header-profile-icon" data-lucide="smile" class="cursor-pointer text-yellow-400" data-page-link="profile"></i>
             <h2 id="page-title" class="text-lg font-bold text-yellow-400 absolute left-1/2 -translate-x-1/2"></h2>
             <div id="header-main-icons" class="flex items-center space-x-5">
-                <i data-lucide="qr-code" class="cursor-pointer"></i>
+                <i data-lucide="qr-code" class="cursor-pointer" data-page-link="my-qr"></i>
                 <i data-lucide="bot" class="cursor-pointer" data-page-link="mentor"></i>
-                <i data-lucide="help-circle" class="cursor-pointer"></i>
+                <i data-lucide="help-circle" class="cursor-pointer" data-page-link="learn"></i>
             </div>
             <i id="header-plus-button" data-lucide="plus" class="cursor-pointer hidden"></i>
         </header>
@@ -106,18 +117,18 @@
                     <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="wallet"><i data-lucide="wallet" class="text-yellow-400"></i><span class="font-semibold">Wallet & Card</span></div>
                     <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="groups"><i data-lucide="users" class="text-yellow-400"></i><span class="font-semibold">Quest Group</span></div>
                     <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="deals"><i data-lucide="tag" class="text-yellow-400"></i><span class="font-semibold">Deals</span></div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="goals"><i data-lucide="shield-check" class="text-yellow-400"></i><span class="font-semibold">Goal Shield</span></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex items-center space-x-3 cursor-pointer" data-page-link="goals"><i data-lucide="shield-check" class="text-yellow-400"></i><span class="font-semibold">Goals</span></div>
                 </div>
             </div>
 
             <!-- Cashflow Overview Page -->
             <div id="cashflow" class="page hidden space-y-5">
                 <div class="relative"><input type="text" placeholder="Search by remark or amount..." class="w-full p-3 pl-10 bg-gray-800 border border-gray-700 rounded-lg focus:ring-1 focus:ring-yellow-400 focus:outline-none text-sm"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"></i></div>
-                <div class="flex items-center space-x-2 overflow-x-auto pb-2">
-                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="calendar" class="h-4 w-4 mr-1.5"></i>Date</button>
-                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="book-user" class="h-4 w-4 mr-1.5"></i>Entry</button>
-                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="user" class="h-4 w-4 mr-1.5"></i>Member</button>
-                    <button class="flex-shrink-0 text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="arrow-left-right" class="h-4 w-4 mr-1.5"></i>Type</button>
+                <div class="flex flex-wrap gap-2">
+                    <button class="text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="calendar" class="h-4 w-4 mr-1.5"></i>Date</button>
+                    <button class="text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="book-user" class="h-4 w-4 mr-1.5"></i>Entry</button>
+                    <button class="text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="user" class="h-4 w-4 mr-1.5"></i>Member</button>
+                    <button class="text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center"><i data-lucide="arrow-left-right" class="h-4 w-4 mr-1.5"></i>Type</button>
                 </div>
                 <div class="grid grid-cols-3 gap-3 text-center bg-gray-800 p-4 rounded-xl border border-gray-700">
                     <div><p class="text-sm text-green-400">Inflow</p><p class="text-lg font-bold">₹15,000</p></div>
@@ -166,18 +177,20 @@
                 <div class="mb-4 border-b border-gray-700"><div class="flex" id="learn-level-tabs"><button class="learn-tab-link flex-1 py-2 border-b-2 active" data-tab="learn-beginner">Beginner</button><button class="learn-tab-link flex-1 py-2 border-b-2 border-transparent text-gray-400" data-tab="learn-intermediate">Intermediate</button><button class="learn-tab-link flex-1 py-2 border-b-2 border-transparent text-gray-400" data-tab="learn-advanced">Advanced</button></div></div>
                 <div id="learn-beginner" class="learn-level-content space-y-4">
                     <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/fbbf24/1f2937?text=Budgeting');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
-                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Income:</p><p class="text-xs text-gray-300">Money received, especially on a regular basis, for work or through investments.</p></div>
-                    <h4 class="font-semibold text-yellow-400">Roadmap</h4><p class="text-xs text-gray-400">1. Track Income → 2. List Expenses → 3. Create Budget</p>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="grid grid-cols-2 gap-3"><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Income:</p><p class="text-xs text-gray-300">Money received on a regular basis.</p></div><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Expense:</p><p class="text-xs text-gray-300">The cost required for something.</p></div></div>
+                    <h4 class="font-semibold text-yellow-400">Roadmap: Budgeting Flowchart</h4><div class="bg-gray-800 p-3 rounded-lg space-y-2 text-xs"><div class="flex items-center"><div class="bg-green-500/20 text-green-300 p-2 rounded-lg">Income ₹15,000</div><div class="flex-1 border-t border-dashed border-gray-600 mx-2"></div><div class="bg-red-500/20 text-red-300 p-2 rounded-lg">Expenses ₹6,460</div></div><div class="flex justify-center"><div class="h-4 border-l border-dashed border-gray-600"></div></div><div class="flex items-center"><div class="bg-blue-500/20 text-blue-300 p-2 rounded-lg">Savings ₹8,540</div><div class="flex-1 border-t border-dashed border-gray-600 mx-2"></div><div class="bg-purple-500/20 text-purple-300 p-2 rounded-lg">Invest ₹500</div></div><div class="text-center mt-2 text-yellow-400">Result: ₹500/mo @ 8% for 1 year = ~₹6,266</div></div>
                     <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Module 1 Quiz</button>
                 </div>
                 <div id="learn-intermediate" class="learn-level-content hidden space-y-4">
                     <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/818cf8/1f2937?text=Credit+Scores');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
-                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Investing:</p><p class="text-xs text-gray-300">Allocating money with the expectation of a positive benefit/return in the future.</p></div>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="grid grid-cols-2 gap-3"><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Investing:</p><p class="text-xs text-gray-300">Allocating money for a future return.</p></div><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Credit Score:</p><p class="text-xs text-gray-300">A number representing your creditworthiness.</p></div></div>
+                    <h4 class="font-semibold text-yellow-400">Roadmap: Credit Building</h4><div class="bg-gray-800 p-3 rounded-lg space-y-2 text-xs text-center"><div class="flex justify-center items-center"><div class="bg-gray-700 p-2 rounded-lg">Pay Bills On Time</div><div class="text-2xl mx-2 text-yellow-400">+</div><div class="bg-gray-700 p-2 rounded-lg">Low Credit Utilization</div></div><div class="h-4 border-l border-dashed border-gray-600 inline-block"></div><div class="bg-green-500/20 text-green-300 p-2 rounded-lg">Good Credit Score</div><div class="h-4 border-l border-dashed border-gray-600 inline-block"></div><div class="bg-blue-500/20 text-blue-300 p-2 rounded-lg">Unlocks Better Loans</div></div>
                     <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Investing Quiz</button>
                 </div>
                 <div id="learn-advanced" class="learn-level-content hidden space-y-4">
                     <h4 class="font-semibold text-yellow-400">Videos</h4><div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/f87171/1f2937?text=Portfolio');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
-                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Diversification:</p><p class="text-xs text-gray-300">A risk management strategy that mixes a wide variety of investments within a portfolio.</p></div>
+                    <h4 class="font-semibold text-yellow-400">Placards</h4><div class="grid grid-cols-2 gap-3"><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Diversification:</p><p class="text-xs text-gray-300">Mixing investments to reduce risk.</p></div><div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">Portfolio:</p><p class="text-xs text-gray-300">A collection of financial investments.</p></div></div>
+                    <h4 class="font-semibold text-yellow-400">Roadmap: Diversification</h4><div class="bg-gray-800 p-3 rounded-lg text-xs text-center"><div class="bg-gray-700 p-2 rounded-lg mb-2">Your Portfolio</div><div class="grid grid-cols-3 gap-2"><div class="flow-arrow bg-red-500/20 text-red-300 p-1 rounded">Stocks</div><div class="flow-arrow bg-blue-500/20 text-blue-300 p-1 rounded">Bonds</div><div class="flow-arrow bg-green-500/20 text-green-300 p-1 rounded">Real Estate</div></div></div>
                      <h4 class="font-semibold text-yellow-400">Quiz</h4><button class="w-full text-sm font-bold bg-gray-700 py-2 rounded-full quiz-button">Take Portfolio Quiz</button>
                 </div>
             </div>
@@ -208,24 +221,70 @@
                 <div class="space-y-3"><div class="bg-gray-800 p-3 rounded-xl border border-gray-700"><h4 class="font-semibold">Burger King</h4><p class="text-sm text-gray-300">Buy 1 Get 1 Free on Whoppers</p></div><div class="bg-gray-800 p-3 rounded-xl border border-gray-700"><h4 class="font-semibold">MakeMyTrip</h4><p class="text-sm text-gray-300">Flat 15% OFF on domestic flights</p></div></div>
             </div>
 
-            <!-- Goal Shield Page -->
-            <div id="goals" class="page hidden space-y-4">
-                <div class="text-center"><p class="text-sm text-gray-400">Total Saved</p><p class="text-2xl font-bold text-yellow-400">₹27,000 / ₹60,000</p></div>
-                <div class="bg-gray-800 p-4 rounded-xl border-2 border-yellow-400">
-                    <div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">💻</div><h3 class="font-semibold">New Laptop</h3></div>
-                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-yellow-400 h-2.5 rounded-full" style="width: 37%;"></div></div>
-                    <div class="flex justify-between text-xs mt-1"><p>₹18,500 / ₹50,000</p><p class="text-gray-400">10 months left</p></div>
-                    <p class="text-xs text-center mt-2 text-green-400 bg-green-900/50 p-1 rounded">Save ₹3,150/month to stay on track</p>
-                </div>
-                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
-                    <div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">❤️</div><h3 class="font-semibold">Health Emergency Fund</h3></div>
-                    <div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-blue-400 h-2.5 rounded-full" style="width: 85%;"></div></div>
-                    <p class="text-right text-xs mt-1 text-gray-400">₹8,500 / ₹10,000</p>
-                </div>
+            <!-- Goals Page -->
+            <div id="goals" class="page hidden">
+                <div class="mb-4 border-b border-gray-700"><div class="flex space-x-4" id="goals-tabs"><button class="tab-link py-2 border-b-2 active" data-tab="goals-content">Goals</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="funds-content">Emergency Funds</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="investments-content">Investments</button></div></div>
+                <div id="goals-content" class="goals-tab-content space-y-4"><div class="text-center"><p class="text-sm text-gray-400">Total Saved</p><p class="text-2xl font-bold text-yellow-400">₹18,500 / ₹50,000</p></div><div class="bg-gray-800 p-4 rounded-xl border-2 border-yellow-400"><div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">💻</div><h3 class="font-semibold">New Laptop</h3></div><div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-yellow-400 h-2.5 rounded-full" style="width: 37%;"></div></div><div class="flex justify-between text-xs mt-1"><p>₹18,500 / ₹50,000</p><p class="text-gray-400">10 months left</p></div><p class="text-xs text-center mt-2 text-green-400 bg-green-900/50 p-1 rounded">Save ₹3,150/month to stay on track</p></div></div>
+                <div id="funds-content" class="goals-tab-content hidden space-y-4"><div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">❤️</div><h3 class="font-semibold">Health Emergency Fund</h3></div><div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-blue-400 h-2.5 rounded-full" style="width: 85%;"></div></div><p class="text-right text-xs mt-1 text-gray-400">₹8,500 / ₹10,000</p></div></div>
+                <div id="investments-content" class="goals-tab-content hidden space-y-4"><div class="flex justify-end"><button class="text-xs font-semibold bg-gray-700 px-3 py-2 rounded-full flex items-center" data-page-link="learn-investments"><i data-lucide="help-circle" class="h-4 w-4 mr-1.5"></i>Help</button></div><div class="bg-gray-800 p-4 rounded-xl border border-gray-700"><div class="flex items-center mb-2"><div class="p-2 bg-gray-700 rounded-lg mr-3">📈</div><h3 class="font-semibold">Virtual Mutual Fund</h3></div><div class="w-full bg-gray-700 rounded-full h-2.5"><div class="bg-purple-400 h-2.5 rounded-full" style="width: 60%;"></div></div><p class="text-right text-xs mt-1 text-gray-400">₹6,000 / ₹10,000</p><p class="text-xs text-center mt-2 text-green-400 bg-green-900/50 p-1 rounded">Projected Value: ₹11,250</p></div></div>
+            </div>
+            
+            <!-- Learn Investments Page -->
+            <div id="learn-investments" class="page hidden space-y-4">
+                <h4 class="font-semibold text-yellow-400">Frequently Asked Questions</h4>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">What is a mutual fund?</p><p class="text-xs text-gray-300 mt-1">A mutual fund pools money from many investors to purchase a diversified portfolio of stocks, bonds, or other securities.</p></div>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm font-bold">How does an FD work?</p></div>
+                <h4 class="font-semibold text-yellow-400">Short Videos</h4>
+                <div class="flex space-x-3 overflow-x-auto pb-2"><div class="flex-shrink-0 w-32 h-20 bg-gray-800 rounded-lg relative bg-cover bg-center" style="background-image: url('https://placehold.co/300x200/a78bfa/1f2937?text=What+is+SIP?');"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i data-lucide="play-circle" class="h-6 w-6 text-white/80"></i></div></div></div>
             </div>
 
             <!-- AI Mentor Page -->
-            <div id="mentor" class="page hidden"></div>
+            <div id="mentor" class="page hidden flex flex-col h-full">
+                 <div class="flex-1 space-y-4 overflow-y-auto">
+                    <div class="flex items-start">
+                        <div class="p-2 bg-gray-700 rounded-full mr-3"><i data-lucide="bot" class="h-5 w-5 text-yellow-400"></i></div>
+                        <div class="bg-gray-800 p-3 rounded-lg max-w-xs"><p class="text-sm">Hi Aman, how can I help you?</p></div>
+                    </div>
+                 </div>
+                 <div class="mt-4 shrink-0">
+                    <div class="grid grid-cols-2 gap-2 text-xs text-center mb-2">
+                        <button class="bg-gray-800 p-2 rounded-lg">Analyze Spending</button>
+                        <button class="bg-gray-800 p-2 rounded-lg">Savings Tips</button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" placeholder="Ask me anything..." class="w-full p-3 pr-12 bg-gray-800 border border-gray-700 rounded-lg focus:ring-1 focus:ring-yellow-400 focus:outline-none text-sm">
+                        <button class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-yellow-500 text-gray-900 rounded-full"><i data-lucide="send" class="h-4 w-4"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profile" class="page hidden space-y-5">
+                <div class="flex flex-col items-center">
+                    <img src="https://placehold.co/80x80/E2E8F0/4A5568?text=A" alt="Aman's Profile" class="w-20 h-20 rounded-full border-2 border-yellow-400">
+                    <h3 class="text-xl font-bold mt-3">Aman Kumar</h3>
+                    <p class="text-sm text-gray-400">aman.kumar@example.com</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-xl space-y-3">
+                    <div class="flex items-center"><i data-lucide="user-cog" class="mr-3 text-yellow-400"></i><span>Edit Profile</span></div>
+                    <div class="flex items-center"><i data-lucide="settings" class="mr-3 text-yellow-400"></i><span>Settings</span></div>
+                    <div class="flex items-center"><i data-lucide="log-out" class="mr-3 text-red-400"></i><span>Logout</span></div>
+                </div>
+            </div>
+
+            <!-- My QR Code Page -->
+            <div id="my-qr" class="page hidden flex flex-col items-center justify-center h-full">
+                <div class="bg-white p-4 rounded-xl">
+                    <img src="https://placehold.co/240x240/ffffff/1f2937?text=Scan+to+Pay+Me" alt="My QR Code" class="rounded-lg">
+                </div>
+                <p class="font-bold text-lg mt-4">Aman Kumar</p>
+                <p class="text-sm text-gray-400">aman.kumar@okbank</p>
+                <div class="flex space-x-4 mt-6">
+                    <button class="flex-1 text-md font-bold bg-yellow-500 text-gray-900 px-6 py-3 rounded-full">Share</button>
+                    <button class="flex-1 text-md font-bold bg-gray-700 px-6 py-3 rounded-full">Download</button>
+                </div>
+            </div>
+
         </main>
 
         <!-- Bottom Navigation -->
@@ -237,41 +296,21 @@
             <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="learn"><i data-lucide="graduation-cap"></i><span class="block text-xs mt-1">Learn</span></a>
         </footer>
 
-        <!-- Floating Action Button for Goal Shield -->
+        <!-- Floating Action Button for Goals Page -->
         <div id="goal-fab-container" class="absolute bottom-24 right-4 z-20 hidden">
             <div id="fab-menu" class="fab-menu flex flex-col items-center space-y-2 mb-2 scale-0 opacity-0 origin-bottom">
                 <button class="flex items-center bg-gray-700 py-1 px-3 rounded-full text-xs" id="add-goal-button">Add Goal</button>
                 <button class="flex items-center bg-gray-700 py-1 px-3 rounded-full text-xs" id="add-fund-button">Add Emergency Fund</button>
+                <button class="flex items-center bg-gray-700 py-1 px-3 rounded-full text-xs" id="add-investment-button">Add Investment</button>
             </div>
             <button id="goal-fab" class="w-14 h-14 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg"><i data-lucide="plus" class="text-gray-900"></i></button>
         </div>
 
         <!-- Modals -->
-        <div id="add-goal-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30">
-            <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700">
-                <h3 class="text-lg font-bold text-yellow-400">Add New Goal</h3>
-                <div><label class="text-sm">Goal Name</label><input type="text" placeholder="e.g., Laptop" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
-                <div><label class="text-sm">Target Amount</label><input type="number" placeholder="50000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
-                <div><label class="text-sm">Completion Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div>
-                <div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div>
-            </div>
-        </div>
-        <div id="add-fund-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30">
-             <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700">
-                <h3 class="text-lg font-bold text-yellow-400">New Emergency Fund</h3>
-                <div><label class="text-sm">Category</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Health</option><option>Vehicle</option><option>Travel</option></select></div>
-                <div><label class="text-sm">Target Amount</label><input type="number" placeholder="10000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div>
-                <div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div>
-            </div>
-        </div>
-        <div id="qr-code-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-20">
-             <div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700 text-center">
-                <h3 class="text-lg font-bold text-yellow-400">Settle Up</h3>
-                <img src="https://placehold.co/200x200/ffffff/1f2937?text=Scan+QR" alt="QR Code" class="mx-auto rounded-lg">
-                <p class="text-sm">Scan with any UPI app to pay Rohan ₹3,000.</p>
-                <button id="close-qr-modal" class="w-full bg-gray-600 font-bold py-2 rounded-lg">Close</button>
-            </div>
-        </div>
+        <div id="add-goal-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add New Goal</h3><div><label class="text-sm">Goal Name</label><input type="text" placeholder="e.g., Laptop" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="50000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Completion Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
+        <div id="add-fund-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Emergency Fund</h3><div><label class="text-sm">Category</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Health</option><option>Vehicle</option><option>Travel</option></select></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="10000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
+        <div id="add-investment-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add Investment</h3><div><p class="text-sm">Do you have a Demat account?</p><div class="flex gap-4 mt-2"><label class="flex items-center"><input type="radio" name="demat" value="no" class="mr-2" checked> No (Simulate)</label><label class="flex items-center"><input type="radio" name="demat" value="yes" class="mr-2"> Yes (Track)</label></div></div><div id="investment-form-no-demat"><div><label class="text-sm">Type</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Mutual Fund (virtual)</option><option>Fixed Deposit (FD)</option></select></div><div><label class="text-sm">Amount</label><input type="number" placeholder="1000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div id="investment-form-yes-demat" class="hidden"><div><label class="text-sm">Asset Name</label><input type="text" placeholder="e.g., Tata Motors" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
+        <div id="qr-code-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-20"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700 text-center"><h3 class="text-lg font-bold text-yellow-400">Settle Up</h3><img src="https://placehold.co/200x200/ffffff/1f2937?text=Scan+QR" alt="QR Code" class="mx-auto rounded-lg"><p class="text-sm">Scan with any UPI app to pay Rohan ₹3,000.</p><button id="close-qr-modal" class="w-full bg-gray-600 font-bold py-2 rounded-lg">Close</button></div></div>
 
     </div>
 
@@ -299,8 +338,11 @@
                 groups: { title: 'Quest Group', back: 'dashboard', plus: true },
                 'group-detail': { title: 'Goa Trip 🌴', back: 'groups', plus: true },
                 deals: { title: 'Deals', back: 'dashboard', plus: false },
-                goals: { title: 'Goal Shield', back: 'dashboard', plus: false },
-                mentor: { title: 'AI Mentor', back: 'dashboard', plus: false }
+                goals: { title: 'Goals', back: 'dashboard', plus: false },
+                'learn-investments': { title: 'Learn Investments', back: 'goals', plus: false },
+                mentor: { title: 'AI Mentor', back: 'dashboard', plus: false },
+                profile: { title: 'My Profile', back: 'dashboard', plus: false },
+                'my-qr': { title: 'My QR Code', back: 'dashboard', plus: false }
             };
 
             function showPage(pageId) {
@@ -364,11 +406,13 @@
             setupTabSwitching('#wallet-tabs button', '.wallet-tab-content');
             setupTabSwitching('#learn-level-tabs button', '.learn-level-content');
             setupTabSwitching('#group-detail-tabs button', '.group-detail-tab-content');
+            setupTabSwitching('#goals-tabs button', '.goals-tab-content');
 
 
             // --- Modal & FAB Logic ---
             const addGoalModal = document.getElementById('add-goal-modal');
             const addFundModal = document.getElementById('add-fund-modal');
+            const addInvestmentModal = document.getElementById('add-investment-modal');
             const qrCodeModal = document.getElementById('qr-code-modal');
 
             function toggleModal(modal, show) {
@@ -387,11 +431,19 @@
 
             document.getElementById('add-goal-button').addEventListener('click', () => toggleModal(addGoalModal, true));
             document.getElementById('add-fund-button').addEventListener('click', () => toggleModal(addFundModal, true));
+            document.getElementById('add-investment-button').addEventListener('click', () => toggleModal(addInvestmentModal, true));
             document.querySelectorAll('.modal-cancel').forEach(btn => btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal'), false)));
             document.querySelectorAll('.modal-save').forEach(btn => btn.addEventListener('click', (e) => toggleModal(e.target.closest('.modal'), false)));
             document.getElementById('share-qr-button')?.addEventListener('click', () => toggleModal(qrCodeModal, true));
             document.getElementById('close-qr-modal')?.addEventListener('click', () => toggleModal(qrCodeModal, false));
             
+            document.querySelectorAll('input[name="demat"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.getElementById('investment-form-no-demat').classList.toggle('hidden', this.value === 'yes');
+                    document.getElementById('investment-form-yes-demat').classList.toggle('hidden', this.value === 'no');
+                });
+            });
+
             // --- Analytics Accordion ---
             document.getElementById('analytics-toggle')?.addEventListener('click', () => {
                 const content = document.getElementById('analytics-content');
