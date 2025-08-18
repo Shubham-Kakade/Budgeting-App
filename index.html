@@ -116,8 +116,8 @@
                     <p class="text-4xl font-bold text-yellow-400">₹ 8,540.00</p>
                 </div>
                 <div class="grid grid-cols-3 gap-3 text-center">
-                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Income</p><p class="text-lg font-bold text-green-400">₹15k</p></div>
-                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Expenses</p><p class="text-lg font-bold text-red-400">₹6.4k</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50 cursor-pointer" data-page-link="income-details"><p class="font-semibold">Income</p><p class="text-lg font-bold text-green-400">₹15k</p></div>
+                    <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50 cursor-pointer" data-page-link="expense-details"><p class="font-semibold">Expenses</p><p class="text-lg font-bold text-red-400">₹6.4k</p></div>
                     <div class="bg-gray-800 p-4 rounded-xl border border-yellow-400/50"><p class="font-semibold">Savings</p><p class="text-lg font-bold text-blue-400">₹8.6k</p></div>
                 </div>
                 <div class="bg-gray-800 p-4 rounded-xl border border-gray-700">
@@ -228,6 +228,7 @@
             <!-- Group Detail Page -->
             <div id="group-detail" class="page hidden">
                  <div class="mb-4 border-b border-gray-700"><div class="flex space-x-4" id="group-detail-tabs"><button class="tab-link py-2 border-b-2 active" data-tab="group-events">Events</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="group-expenses">Expenses</button><button class="tab-link py-2 border-b-2 border-transparent text-gray-400" data-tab="group-balances">Balances</button></div></div>
+                 <div id="group-events" class="group-detail-tab-content space-y-3"><div class="p-3 bg-gray-700/50 rounded-lg"><p class="font-semibold">Weekend Trip</p><p class="text-xs text-gray-400">Total Spent: ₹20,500</p></div></div>
                  <div id="group-expenses" class="group-detail-tab-content hidden space-y-3"><div class="p-2 border-l-2 border-red-400 bg-gray-700/50 rounded-r-lg"><p class="text-sm">Flights (Paid by Rohan)</p><p class="text-xs text-red-300">You owe ₹3,000</p></div></div>
                  <div id="group-balances" class="group-detail-tab-content hidden space-y-3"><div class="text-center font-bold text-green-400">Overall: You are owed ₹750</div><button id="share-qr-button" class="w-full mt-4 text-md font-bold bg-yellow-500 text-gray-900 px-3 py-3 rounded-full flex items-center justify-center"><i data-lucide="qr-code" class="mr-2"></i>Share QR to Settle</button></div>
             </div>
@@ -302,6 +303,23 @@
                 </div>
             </div>
 
+            <!-- Income Details Page -->
+            <div id="income-details" class="page hidden space-y-4">
+                <div class="bg-gray-800 p-4 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center"><p>Internship Stipend</p><p class="font-bold text-green-400">+ ₹10,000</p></div>
+                    <div class="flex justify-between items-center"><p>Freelance Work</p><p class="font-bold text-green-400">+ ₹5,000</p></div>
+                </div>
+            </div>
+
+            <!-- Expense Details Page -->
+            <div id="expense-details" class="page hidden space-y-4">
+                 <div class="bg-gray-800 p-4 rounded-xl space-y-3">
+                    <div class="flex justify-between items-center"><p>Rent Payment</p><p class="font-bold text-red-400">- ₹4,500</p></div>
+                    <div class="flex justify-between items-center"><p>Dinner with Friends</p><p class="font-bold text-red-400">- ₹850</p></div>
+                    <div class="flex justify-between items-center"><p>Cafe Coffee Day</p><p class="font-bold text-red-400">- ₹150</p></div>
+                 </div>
+            </div>
+
         </main>
 
         <!-- Bottom Navigation -->
@@ -324,6 +342,7 @@
         </div>
 
         <!-- Modals -->
+        <div id="add-group-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Bill Buddy Group</h3><div><label class="text-sm">Group Name</label><input type="text" placeholder="e.g., Flatmates" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Create</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-goal-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add New Goal</h3><div><label class="text-sm">Goal Name</label><input type="text" placeholder="e.g., Laptop" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="50000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Completion Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-fund-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Emergency Fund</h3><div><label class="text-sm">Category</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Health</option><option>Vehicle</option><option>Travel</option></select></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="10000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-investment-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add Investment</h3><div><p class="text-sm">Do you have a Demat account?</p><div class="flex gap-4 mt-2"><label class="flex items-center"><input type="radio" name="demat" value="no" class="mr-2" checked> No (Simulate)</label><label class="flex items-center"><input type="radio" name="demat" value="yes" class="mr-2"> Yes (Track)</label></div></div><div id="investment-form-no-demat"><div><label class="text-sm">Type</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Mutual Fund (virtual)</option><option>Fixed Deposit (FD)</option></select></div><div><label class="text-sm">Amount</label><input type="number" placeholder="1000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div id="investment-form-yes-demat" class="hidden"><div><label class="text-sm">Asset Name</label><input type="text" placeholder="e.g., Tata Motors" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
@@ -359,8 +378,12 @@
                 'learn-investments': { title: 'Learn Investments', back: 'goals', plus: false },
                 mentor: { title: 'AI Mentor', back: 'dashboard', plus: false },
                 profile: { title: 'My Profile', back: 'dashboard', plus: false },
-                'my-qr': { title: 'My QR Code', back: 'dashboard', plus: false }
+                'my-qr': { title: 'My QR Code', back: 'dashboard', plus: false },
+                'income-details': { title: 'Income Details', back: 'dashboard', plus: false },
+                'expense-details': { title: 'Expense Details', back: 'dashboard', plus: false }
             };
+
+            let currentPageId = 'dashboard';
 
             function showPage(pageId) {
                 document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
@@ -379,6 +402,8 @@
                 goalFabContainer.classList.toggle('hidden', pageId !== 'goals');
                 
                 if (config.back) headerBackButton.dataset.pageLink = config.back;
+
+                currentPageId = pageId;
 
                 if (pageId === 'reports' && !document.getElementById('reports').dataset.chartsInitialized) {
                     initializeReportCharts();
@@ -430,6 +455,7 @@
             const addGoalModal = document.getElementById('add-goal-modal');
             const addFundModal = document.getElementById('add-fund-modal');
             const addInvestmentModal = document.getElementById('add-investment-modal');
+            const addGroupModal = document.getElementById('add-group-modal');
             const qrCodeModal = document.getElementById('qr-code-modal');
 
             function toggleModal(modal, show) {
@@ -440,6 +466,12 @@
                 }
             }
             
+            headerPlusButton.addEventListener('click', () => {
+                if (currentPageId === 'groups') {
+                    toggleModal(addGroupModal, true);
+                }
+            });
+
             document.getElementById('goal-fab').addEventListener('click', () => {
                 const menu = document.getElementById('fab-menu');
                 menu.classList.toggle('scale-0');
@@ -519,7 +551,7 @@
                 initializeChart('expensesPieChart', 'pie', ['Food', 'Rent', 'Travel'], [45, 35, 20], ['#f87171', '#60a5fa', '#fb923c'], legendOptions);
                 initializeChart('incomePieChart', 'doughnut', ['Stipend', 'Freelance'], [80, 20], ['#34d399', '#a78bfa'], legendOptions);
                 const barCtx = document.getElementById('savingsBarChart')?.getContext('2d');
-                if(barCtx) new Chart(barCtx, { type: 'bar', data: { labels: ['Jun', 'Jul', 'Aug'], datasets: [{ label: 'Savings', data: [1200, 1800, 1500], backgroundColor: '#4ade80' }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' }}, y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#9ca3af' } } } } });
+                if(barCtx) new Chart(barCtx, { type: 'bar', data: { labels: ['Jun', 'Jul', 'Aug'], datasets: [{ label: 'Savings', data: [1200, 1800, 1500], backgroundColor: '#4ade80' }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#9ca3af' }}, y: { grid: { color: 'rgba(255,255,250,0.1)' }, ticks: { color: '#9ca3af' } } } } });
             }
             
             function initializeEnvelopeChart() {
