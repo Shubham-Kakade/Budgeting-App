@@ -399,7 +399,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             lucide.createIcons();
 
-            const cashflowChart = new Chart(document.getElementById('cashflowChart'), { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ data: [3000, 5000, 4500, 8000], backgroundColor: 'rgba(225, 29, 116, 0.1)', borderColor: '#E11D74', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: false }, x: { grid: { display: false }, ticks: { color: '#9ca3af' } } }, plugins: { legend: { display: false } } } });
+            const cashflowChart = new Chart(document.getElementById('cashflowChart'), { type: 'line', data: { labels: ['W1', 'W2', 'W3', 'W4'], datasets: [{ data: [3000, 5000, 4500, 8000], backgroundColor: 'rgba(225, 29, 116, 0.1)', borderColor: '#E11D74', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { display: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#9ca3af' } }, x: { grid: { display: false }, ticks: { color: '#9ca3af' } } }, plugins: { legend: { display: false } } } });
             
             const pageTitle = document.getElementById('page-title');
             const headerMainIcons = document.getElementById('header-main-icons');
