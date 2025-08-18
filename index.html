@@ -87,7 +87,7 @@
         <!-- Top Header (Health Bar) -->
         <header id="app-header" class="h-16 bg-gray-800/80 backdrop-blur-sm flex items-center justify-between px-4 shrink-0 border-b border-gray-700 relative z-10">
             <i id="header-back-button" data-lucide="arrow-left" class="cursor-pointer hidden" data-page-link=""></i>
-            <i id="header-profile-icon" data-lucide="smile" class="cursor-pointer text-yellow-400" data-page-link="profile"></i>
+            <img id="header-profile-icon" src="https://raw.githubusercontent.com/Shubham-Kakade/Budgeting-App/main/PocketOwl.png" alt="Profile Mascot" class="w-8 h-8 cursor-pointer" data-page-link="profile">
             <h2 id="page-title" class="text-lg font-bold text-yellow-400 absolute left-1/2 -translate-x-1/2"></h2>
             <div id="header-main-icons" class="flex items-center space-x-5">
                 <i data-lucide="qr-code" class="cursor-pointer" data-page-link="my-qr"></i>
@@ -326,7 +326,10 @@
         <footer class="h-20 bg-gray-800/80 backdrop-blur-sm flex items-center justify-around shrink-0 border-t border-gray-700 z-10">
             <a href="#" class="bottom-nav-link text-center text-gray-400 p-2 active" data-page="dashboard"><i data-lucide="home"></i><span class="block text-xs mt-1">Home</span></a>
             <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="cashflow"><i data-lucide="bar-chart-3"></i><span class="block text-xs mt-1">Cashflow</span></a>
-            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="envelope"><i data-lucide="folder-kanban"></i><span class="block text-xs mt-1">Envelope</span></a>
+            <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="envelope">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M2 6l10 7 10-7M6 20V10l6 4 6-4v10H6z"/></svg>
+                <span class="block text-xs mt-1">Envelope</span>
+            </a>
             <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="planner-todo"><i data-lucide="list-checks"></i><span class="block text-xs mt-1">PlanIT</span></a>
             <a href="#" class="bottom-nav-link text-center text-gray-400 p-2" data-page="learn"><i data-lucide="graduation-cap"></i><span class="block text-xs mt-1">FinNst</span></a>
         </footer>
@@ -343,11 +346,12 @@
 
         <!-- Modals -->
         <div id="add-group-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Bill Buddy Group</h3><div><label class="text-sm">Group Name</label><input type="text" placeholder="e.g., Flatmates" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Create</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
+        <div id="add-todo-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New To-Do Item</h3><div><label class="text-sm">Name & Amount</label><input type="text" placeholder="e.g., Rent: ₹2000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Due Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-goal-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add New Goal</h3><div><label class="text-sm">Goal Name</label><input type="text" placeholder="e.g., Laptop" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="50000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Completion Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-fund-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Emergency Fund</h3><div><label class="text-sm">Category</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Health</option><option>Vehicle</option><option>Travel</option></select></div><div><label class="text-sm">Target Amount</label><input type="number" placeholder="10000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="add-investment-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">Add Investment</h3><div><p class="text-sm">Do you have a Demat account?</p><div class="flex gap-4 mt-2"><label class="flex items-center"><input type="radio" name="demat" value="no" class="mr-2" checked> No (Simulate)</label><label class="flex items-center"><input type="radio" name="demat" value="yes" class="mr-2"> Yes (Track)</label></div></div><div id="investment-form-no-demat"><div><label class="text-sm">Type</label><select class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"><option>Mutual Fund (virtual)</option><option>Fixed Deposit (FD)</option></select></div><div><label class="text-sm">Amount</label><input type="number" placeholder="1000" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div id="investment-form-yes-demat" class="hidden"><div><label class="text-sm">Asset Name</label><input type="text" placeholder="e.g., Tata Motors" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
         <div id="qr-code-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-20"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700 text-center"><h3 class="text-lg font-bold text-yellow-400">Settle Up</h3><img src="https://placehold.co/200x200/ffffff/1f2937?text=Scan+QR" alt="QR Code" class="mx-auto rounded-lg"><p class="text-sm">Scan with any UPI app to pay Rohan ₹3,000.</p><button id="close-qr-modal" class="w-full bg-gray-600 font-bold py-2 rounded-lg">Close</button></div></div>
-
+        <div id="add-envelope-modal" class="modal absolute inset-0 bg-black/60 flex justify-center items-center p-4 opacity-0 pointer-events-none z-30"><div class="bg-gray-800 rounded-xl p-5 w-full max-w-xs space-y-4 border border-gray-700"><h3 class="text-lg font-bold text-yellow-400">New Envelope</h3><div><label class="text-sm">Name</label><input type="text" placeholder="e.g., Grocery" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm"></div><div><label class="text-sm">Due Date</label><input type="date" class="w-full p-2 bg-gray-700 rounded-lg mt-1 text-sm" style="color-scheme: dark;"></div><div class="flex space-x-2"><button class="flex-1 bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg modal-save">Save</button><button class="flex-1 bg-gray-600 font-bold py-2 rounded-lg modal-cancel">Cancel</button></div></div></div>
     </div>
 
     <script>
@@ -456,19 +460,27 @@
             const addFundModal = document.getElementById('add-fund-modal');
             const addInvestmentModal = document.getElementById('add-investment-modal');
             const addGroupModal = document.getElementById('add-group-modal');
+            const addTodoModal = document.getElementById('add-todo-modal');
+            const addEnvelopeModal = document.getElementById('add-envelope-modal');
             const qrCodeModal = document.getElementById('qr-code-modal');
 
             function toggleModal(modal, show) {
-                if(show) {
-                    modal.classList.remove('opacity-0', 'pointer-events-none');
-                } else {
-                    modal.classList.add('opacity-0', 'pointer-events-none');
+                if(modal) {
+                    if(show) {
+                        modal.classList.remove('opacity-0', 'pointer-events-none');
+                    } else {
+                        modal.classList.add('opacity-0', 'pointer-events-none');
+                    }
                 }
             }
             
             headerPlusButton.addEventListener('click', () => {
                 if (currentPageId === 'groups') {
                     toggleModal(addGroupModal, true);
+                } else if (currentPageId === 'planner-todo') {
+                    toggleModal(addTodoModal, true);
+                } else if (currentPageId === 'envelope') {
+                    toggleModal(addEnvelopeModal, true);
                 }
             });
 
@@ -561,4 +573,3 @@
     </script>
 </body>
 </html>
-
